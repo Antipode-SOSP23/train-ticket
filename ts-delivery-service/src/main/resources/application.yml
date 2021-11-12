@@ -12,3 +12,10 @@ spring:
   rabbitmq:
     host: ${rabbitmq_host:localhost}
     port: ${rabbitmq_port:5672}
+
+
+opentracing:
+  jaeger:
+    udp-sender:
+      host: jaeger
+      port: 6831

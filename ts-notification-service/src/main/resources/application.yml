@@ -32,3 +32,10 @@ spring:
 
 swagger:
   controllerPackage: notification.controller
+
+
+opentracing:
+  jaeger:
+    udp-sender:
+      host: jaeger
+      port: 6831

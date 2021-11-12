@@ -8,29 +8,40 @@ version: '3'
 
 services:
 
-#  rabbitmq:
-#    image: rabbitmq:management
-#    ports:
-#      - 5672:5672
-#      - 15672:15672
-#    networks:
-#      - my-network
+  # rabbitmq:
+  #   image: rabbitmq:management
+  #   ports:
+  #     - 5672:5672
+  #     - 15672:15672
+  #   networks:
+  #     - my-network
 
   # kafka:
   #   container_name: kafka
   #   image: spotify/kafka:latest
   #   ports:
-  #    - 2181:2181
-  #    - 9092:9092
+  #   - 2181:2181
+  #   - 9092:9092
   #   networks:
   #     - my-network
 
-#  zipkin:
-#    image: openzipkin/zipkin
-#    ports:
-#      - 9411:9411
-#    networks:
-#      - my-network
+  # zipkin:
+  #   image: openzipkin/zipkin
+  #   ports:
+  #     - 9411:9411
+  #   networks:
+  #     - my-network
+
+  jaeger:
+    image: jaegertracing/all-in-one:1.15
+    ports:
+      - 16686:16686
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    networks:
+      - my-network
 
   redis:
     image: redis
@@ -562,8 +573,3 @@ networks:
     my-network:
       # driver: overlay
       driver: bridge
-
-
-
-
-

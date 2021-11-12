@@ -16,3 +16,9 @@ spring:
     port: ${rabbitmq_port:5672}
 swagger:
   controllerPackage: foodsearch.controller
+
+opentracing:
+  jaeger:
+    udp-sender:
+      host: jaeger
+      port: 6831
