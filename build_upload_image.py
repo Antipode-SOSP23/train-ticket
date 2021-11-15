@@ -1,7 +1,6 @@
 import os
 
-PREFIX = "registry.cn-hangzhou.aliyuncs.com/lavenpok"
-VERSION = "error-F1"
+PREFIX = "codewisdom"
 
 base_path = os.getcwd()
 build_paths = []
