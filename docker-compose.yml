@@ -1,20 +1,14 @@
 version: '3'
 
-# push image
-# ! /bin/bash
-# for i in $(docker images | grep kagaya85 | awk 'BEGIN{OFS=":"}{print $1,$2}'); do
-# docker push $i;
-# done
-
 services:
 
-  # rabbitmq:
-  #   image: rabbitmq:management
-  #   ports:
-  #     - 5672:5672
-  #     - 15672:15672
-  #   networks:
-  #     - my-network
+  rabbitmq:
+    image: rabbitmq:management
+    ports:
+      - 5672:5672
+      - 15672:15672
+    networks:
+      - my-network
 
   # kafka:
   #   container_name: kafka
@@ -277,6 +271,11 @@ services:
       - my-network
 
   ts-price-mongo:
+    image: mongo
+    networks:
+      - my-network
+
+  ts-notification-mongo:
     image: mongo
     networks:
       - my-network

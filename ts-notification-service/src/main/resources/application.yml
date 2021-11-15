@@ -26,8 +26,18 @@ spring:
       port: 27017
 
   rabbitmq:
-    host: ${rabbitmq_host:localhost}
-    port: ${rabbitmq_port:5672}
+    host: rabbitmq
+    port: 5672
+    username: guest
+    password: guest
+    listener:
+      retry:
+        enabled: true
+        max-attempts: 10
+    template:
+      retry:
+        enabled: false
+        max-attempts: 1
 
 
 swagger:
