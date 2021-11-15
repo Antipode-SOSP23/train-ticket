@@ -48,7 +48,7 @@ public class CancelControllerTest {
     @Test
     public void testCalculate() throws Exception {
         Mockito.when(cancelService.calculateRefund(Mockito.anyString(), Mockito.any(HttpHeaders.class))).thenReturn(response);
-        String result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/cancelservice/cancel/refound/order_id"))
+        String result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/cancelservice/cancel/refund/order_id"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn().getResponse().getContentAsString();
         Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));

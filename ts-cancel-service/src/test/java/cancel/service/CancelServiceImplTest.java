@@ -107,7 +107,7 @@ public class CancelServiceImplTest {
                 new ParameterizedTypeReference<Response<Order>>() {
                 })).thenReturn(re);
         Response result = cancelServiceImpl.calculateRefund("order_id", headers);
-        Assert.assertEquals(new Response<>(0, "Order Status Cancel Not Permitted, Refound error", null), result);
+        Assert.assertEquals(new Response<>(0, "Order Status Cancel Not Permitted, Refund error", null), result);
     }
 
     @Test

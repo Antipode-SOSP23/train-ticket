@@ -169,7 +169,7 @@ var appConsign = new Vue({
             $('#my-svg-change-order').shCircleLoader({namespace: 'runLoad'});
             $.ajax({
                 type: "get",
-                url: "/api/v1/cancelservice/cancel/refound/" + orderId,
+                url: "/api/v1/cancelservice/cancel/refund/" + orderId,
                 contentType: "application/json",
                 dataType: "json",
                 headers: {"Authorization": "Bearer " + sessionStorage.getItem("client_token")},

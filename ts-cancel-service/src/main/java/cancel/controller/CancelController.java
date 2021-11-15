@@ -31,7 +31,7 @@ public class CancelController {
     }
 
     @CrossOrigin(origins = "*")
-    @GetMapping(path = "/cancel/refound/{orderId}")
+    @GetMapping(path = "/cancel/refund/{orderId}")
     public HttpEntity calculate(@PathVariable String orderId, @RequestHeader HttpHeaders headers) {
         CancelController.LOGGER.info("[Calculate Cancel Refund] OrderId: {}", orderId);
         return ok(cancelService.calculateRefund(orderId, headers));
