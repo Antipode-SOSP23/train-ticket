@@ -37,6 +37,18 @@ public class InitUser implements CommandLineRunner {
             userRepository.save(user);
         }
 
+        // [ANTIPODE] Add antipode user to ease up scripts
+        User whetherExistAntipodeUser = userRepository.findByUsername("antipode").orElse(new User());
+        if (whetherExistAntipodeUser.getUsername() == null) {
+            User user = User.builder()
+                    .userId(UUID.fromString("d05c7ef0-d593-4180-91b4-eb0378192d75"))
+                    .username("antipode")
+                    .password(passwordEncoder.encode("antipode"))
+                    .roles(new HashSet<>(Arrays.asList("ROLE_USER")))
+                    .build();
+            userRepository.save(user);
+        }
+
         User whetherExistAdmin = userRepository.findByUsername("admin").orElse(new User());
         if (whetherExistAdmin.getUsername() == null) {
             User admin = User.builder()
