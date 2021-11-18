@@ -34,7 +34,8 @@ public class AsyncTask {
     @Async("myAsync")
     public Future<Response> cancelFromOrder(Order order, HttpHeaders headers) throws InterruptedException {
         /*********************** Fault Reproduction - Error Process Seq *************************/
-        double op = new Random().nextDouble();
+        // double op = new Random().nextDouble();
+        double op = 0; // [ANTIPODE] Always delay drawback -- remove randomness
         if (op < 1.0) {
             AsyncTask.LOGGER.error("[Cancel Order Service] Delay Process，Wrong Cancel Process");
             Thread.sleep(4000);

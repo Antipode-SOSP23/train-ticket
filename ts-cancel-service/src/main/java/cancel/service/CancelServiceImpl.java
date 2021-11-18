@@ -52,43 +52,42 @@ public class CancelServiceImpl implements CancelService {
                 String money = calculateRefund(order);
                 Future<Boolean> drawbackMoneyFuture = asyncTask.drawBackMoney(money, loginId, headers);
 
-                while (!cancelOrderFuture.isDone() || !drawbackMoneyFuture.isDone()) {
+                // while (!cancelOrderFuture.isDone() || !drawbackMoneyFuture.isDone()) {
+                // [ANTIPODE] Do not wait for drawback money future
+                while (!cancelOrderFuture.isDone()) {
                     // wait for task done.
                 }
 
                 Response changeOrderResult = cancelOrderFuture.get();
                 if (changeOrderResult.getStatus() == 1) {
-
                     CancelServiceImpl.LOGGER.info("[Cancel Order] Success.");
-                    //Draw back money
-//                    String money = calculateRefund(order);
-                    boolean status = drawbackMoneyFuture.get();
-                    if (status) {
-                        CancelServiceImpl.LOGGER.info("[Draw Back Money] Success.");
 
+                    // //Draw back money
+                    // boolean status = drawbackMoneyFuture.get();
+                    // if (status) {
+                    //     CancelServiceImpl.LOGGER.info("[Draw Back Money] Success.");
 
+                    //     Response<User> result = getAccount(order.getAccountId().toString(), headers);
+                    //     if (result.getStatus() == 0) {
+                    //         return new Response<>(0, "Cann't find userinfo by user id.", null);
+                    //     }
+                    //     NotifyInfo notifyInfo = new NotifyInfo();
+                    //     notifyInfo.setDate(new Date().toString());
+                    //     notifyInfo.setEmail(result.getData().getEmail());
+                    //     notifyInfo.setStartingPlace(order.getFrom());
+                    //     notifyInfo.setEndPlace(order.getTo());
+                    //     notifyInfo.setUsername(result.getData().getUserName());
+                    //     notifyInfo.setSeatNumber(order.getSeatNumber());
+                    //     notifyInfo.setOrderNumber(order.getId().toString());
+                    //     notifyInfo.setPrice(order.getPrice());
+                    //     notifyInfo.setSeatClass(SeatClass.getNameByCode(order.getSeatClass()));
+                    //     notifyInfo.setStartingTime(order.getTravelTime().toString());
 
-                        Response<User> result = getAccount(order.getAccountId().toString(), headers);
-                        if (result.getStatus() == 0) {
-                            return new Response<>(0, "Cann't find userinfo by user id.", null);
-                        }
-                        NotifyInfo notifyInfo = new NotifyInfo();
-                        notifyInfo.setDate(new Date().toString());
-                        notifyInfo.setEmail(result.getData().getEmail());
-                        notifyInfo.setStartingPlace(order.getFrom());
-                        notifyInfo.setEndPlace(order.getTo());
-                        notifyInfo.setUsername(result.getData().getUserName());
-                        notifyInfo.setSeatNumber(order.getSeatNumber());
-                        notifyInfo.setOrderNumber(order.getId().toString());
-                        notifyInfo.setPrice(order.getPrice());
-                        notifyInfo.setSeatClass(SeatClass.getNameByCode(order.getSeatClass()));
-                        notifyInfo.setStartingTime(order.getTravelTime().toString());
+                    //     sendEmail(notifyInfo, headers);
 
-                        sendEmail(notifyInfo, headers);
-
-                    } else {
-                        CancelServiceImpl.LOGGER.error("[Draw Back Money] Fail, loginId: {}, orderId: {}", loginId, orderId);
-                    }
+                    // } else {
+                    //     CancelServiceImpl.LOGGER.error("[Draw Back Money] Fail, loginId: {}, orderId: {}", loginId, orderId);
+                    // }
                     return new Response<>(1, "Success.", "test not null");
                 } else {
                     CancelServiceImpl.LOGGER.error("[Cancel Order] Fail, orderId: {}, Reason: {}", orderId, changeOrderResult.getMsg());
@@ -111,7 +110,7 @@ public class CancelServiceImpl implements CancelService {
 
                     CancelServiceImpl.LOGGER.info("[Cancel Order] Order status ok");
 
-//                    order.setStatus(OrderStatus.CANCEL.getCode());
+                    // order.setStatus(OrderStatus.CANCEL.getCode());
                     Response changeOrderResult = cancelFromOtherOrder(order, headers);
 
                     if (changeOrderResult.getStatus() == 1) {

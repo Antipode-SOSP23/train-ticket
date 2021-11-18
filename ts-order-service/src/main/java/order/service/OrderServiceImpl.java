@@ -166,7 +166,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Response queryOrdersForRefresh(OrderInfo qi, String accountId, HttpHeaders headers) {
-        ArrayList<Order> orders =   queryOrders(qi, accountId, headers).getData();
+        ArrayList<Order> orders = queryOrders(qi, accountId, headers).getData();
         ArrayList<String> stationIds = new ArrayList<>();
         for (Order order : orders) {
             stationIds.add(order.getFrom());
@@ -428,4 +428,3 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 }
-
