@@ -309,7 +309,7 @@ public class InsidePaymentServiceImpl implements InsidePaymentService {
     public Response queryAddMoney(HttpHeaders headers) {
         List<Money> monies = addMoneyRepository.findAll();
         if (monies != null && !monies.isEmpty()) {
-            return new Response<>(1, "Query Money Success", null);
+            return new Response<>(1, "Query Money Success", monies);
         } else {
             LOGGER.error("Query money failed");
             return new Response<>(0, "Query money failed", null);
