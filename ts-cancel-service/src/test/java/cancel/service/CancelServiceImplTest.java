@@ -141,11 +141,11 @@ public class CancelServiceImplTest {
         Response response = new Response<>(1, null, null);
         ResponseEntity<Response> re = new ResponseEntity<>(response, HttpStatus.OK);
         Mockito.when(restTemplate.exchange(
-                "http://ts-inside-payment-service:18673/api/v1/inside_pay_service/inside_payment/drawback/" + "userId" + "/" + "money",
+                "http://ts-inside-payment-service:18673/api/v1/inside_pay_service/inside_payment/drawback/" + "userId" + "/" + "orderId" + "/" + "money",
                 HttpMethod.GET,
                 requestEntity,
                 Response.class)).thenReturn(re);
-        Boolean result = cancelServiceImpl.drawbackMoney("money", "userId", headers);
+        Boolean result = cancelServiceImpl.drawbackMoney("userId", "orderId", "money", headers);
         Assert.assertTrue(result);
     }
 

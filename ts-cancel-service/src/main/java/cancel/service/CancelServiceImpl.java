@@ -117,7 +117,7 @@ public class CancelServiceImpl implements CancelService {
                         CancelServiceImpl.LOGGER.info("[Cancel Order] Success.");
                         //Draw back money
                         String money = calculateRefund(order);
-                        boolean status = drawbackMoney(money, loginId, headers);
+                        boolean status = drawbackMoney(money, orderId, loginId, headers);
                         if (status) {
                             CancelServiceImpl.LOGGER.info("[Draw Back Money] Success.");
                         } else {
@@ -271,13 +271,13 @@ public class CancelServiceImpl implements CancelService {
         return re.getBody();
     }
 
-    public boolean drawbackMoney(String money, String userId, HttpHeaders headers) {
+    public boolean drawbackMoney(String userId, String orderId, String money, HttpHeaders headers) {
         CancelServiceImpl.LOGGER.info("[Draw Back Money] Draw back money...");
 
         HttpHeaders newHeaders = getAuthorizationHeadersFrom(headers);
         HttpEntity requestEntity = new HttpEntity(newHeaders);
         ResponseEntity<Response> re = restTemplate.exchange(
-                "http://ts-inside-payment-service:18673/api/v1/inside_pay_service/inside_payment/drawback/" + userId + "/" + money,
+                "http://ts-inside-payment-service:18673/api/v1/inside_pay_service/inside_payment/drawback/" + userId + "/" + orderId +"/" + money,
                 HttpMethod.GET,
                 requestEntity,
                 Response.class);

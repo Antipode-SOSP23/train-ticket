@@ -145,14 +145,14 @@ public class InsidePaymentServiceImplTest {
         List<Money> list = new ArrayList<>();
         Mockito.when(addMoneyRepository.findByUserId(Mockito.anyString())).thenReturn(list);
         Mockito.when(addMoneyRepository.save(Mockito.any(Money.class))).thenReturn(null);
-        Response result = insidePaymentServiceImpl.drawBack("user_id", "money", headers);
+        Response result = insidePaymentServiceImpl.drawBack("user_id", "order_id", "money", headers);
         Assert.assertEquals(new Response<>(1, "Draw Back Money Success", null), result);
     }
 
     @Test
     public void testDrawBack2() {
         Mockito.when(addMoneyRepository.findByUserId(Mockito.anyString())).thenReturn(null);
-        Response result = insidePaymentServiceImpl.drawBack("user_id", "money", headers);
+        Response result = insidePaymentServiceImpl.drawBack("user_id", "order_id", "money", headers);
         Assert.assertEquals(new Response<>(0, "Draw Back Money Failed", null), result);
     }
 

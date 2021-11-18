@@ -25,6 +25,9 @@ public class Money {
     private String userId;
 
     @Valid
+    private String orderId;
+
+    @Valid
     @NotNull
     private String money; //NOSONAR
 
@@ -36,7 +39,7 @@ public class Money {
         this.id = UUID.randomUUID().toString();
         this.userId = "";
         this.money = "";
-
+        this.orderId = "";
     }
 
 }

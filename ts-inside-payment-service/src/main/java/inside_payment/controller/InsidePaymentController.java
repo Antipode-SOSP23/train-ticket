@@ -59,10 +59,10 @@ public class InsidePaymentController {
         return ok(service.queryAccount(headers));
     }
 
-    @GetMapping(value = "/inside_payment/drawback/{userId}/{money}")
-    public HttpEntity drawBack(@PathVariable String userId, @PathVariable String money, @RequestHeader HttpHeaders headers) {
-        LOGGER.info("draw back payment, userId: {}, money: {}", userId, money);
-        return ok(service.drawBack(userId, money, headers));
+    @GetMapping(value = "/inside_payment/drawback/{userId}/{orderId}/{money}")
+    public HttpEntity drawBack(@PathVariable String userId, @PathVariable String orderId, @PathVariable String money, @RequestHeader HttpHeaders headers) {
+        LOGGER.info("draw back payment, userId: {}, money: {}", userId, orderId, money);
+        return ok(service.drawBack(userId, orderId, money, headers));
     }
 
     @PostMapping(value = "/inside_payment/difference")

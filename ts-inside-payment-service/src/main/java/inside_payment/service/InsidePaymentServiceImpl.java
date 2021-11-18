@@ -232,11 +232,12 @@ public class InsidePaymentServiceImpl implements InsidePaymentService {
     }
 
     @Override
-    public Response drawBack(String userId, String money, HttpHeaders headers) {
+    public Response drawBack(String userId, String orderId, String money, HttpHeaders headers) {
         if (addMoneyRepository.findByUserId(userId) != null) {
             Money addMoney = new Money();
             addMoney.setUserId(userId);
             addMoney.setMoney(money);
+            addMoney.setOrderId(orderId);
             addMoney.setType(MoneyType.D);
             addMoneyRepository.save(addMoney);
             return new Response<>(1, "Draw Back Money Success", null);

@@ -109,7 +109,7 @@ public class RebookServiceImpl implements RebookService {
         if (priceOld.compareTo(priceNew) > 0) {
             //Refund the difference
             String difference = priceOld.subtract(priceNew).toString();
-            if (!drawBackMoney(info.getLoginId(), difference, httpHeaders)) {
+            if (!drawBackMoney(info.getLoginId(), order.getId().toString(), difference, httpHeaders)) {
                 RebookServiceImpl.LOGGER.warn("Rebook warn.Can't draw back the difference money,OrderId: {},LoginId: {},difference: {}",info.getOrderId(),info.getLoginId(),difference);
                 return new Response<>(0, "Can't draw back the difference money, please try again!", null);
             }
@@ -396,12 +396,12 @@ public class RebookServiceImpl implements RebookService {
         return result.getStatus() == 1;
     }
 
-    private boolean drawBackMoney(String userId, String money, HttpHeaders httpHeaders) {
+    private boolean drawBackMoney(String userId, String orderId, String money, HttpHeaders httpHeaders) {
 
         HttpHeaders newHeaders = getAuthorizationHeadersFrom(httpHeaders);
         HttpEntity requestEntityDrawBackMoney = new HttpEntity(newHeaders);
         ResponseEntity<Response> reDrawBackMoney = restTemplate.exchange(
-                "http://ts-inside-payment-service:18673/api/v1/inside_pay_service/inside_payment/drawback/" + userId + "/" + money,
+                "http://ts-inside-payment-service:18673/api/v1/inside_pay_service/inside_payment/drawback/" + userId + "/" + orderId + "/" + money,
                 HttpMethod.GET,
                 requestEntityDrawBackMoney,
                 Response.class);

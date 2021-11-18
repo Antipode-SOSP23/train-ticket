@@ -95,8 +95,8 @@ public class InsidePaymentControllerTest {
 
     @Test
     public void testDrawBack() throws Exception {
-        Mockito.when(service.drawBack(Mockito.anyString(), Mockito.anyString(), Mockito.any(HttpHeaders.class))).thenReturn(response);
-        String result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/inside_pay_service/inside_payment/drawback/user_id/money"))
+        Mockito.when(service.drawBack(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/inside_pay_service/inside_payment/drawback/user_id/order_id/money"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn().getResponse().getContentAsString();
         Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
