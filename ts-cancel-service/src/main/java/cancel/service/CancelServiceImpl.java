@@ -47,18 +47,22 @@ public class CancelServiceImpl implements CancelService {
                     || order.getStatus() == OrderStatus.PAID.getCode() || order.getStatus() == OrderStatus.CHANGE.getCode()) {
                 /*********************** Fault Reproduction - Error Process Seq *************************/
                 // 1. cancel order
-                Future<Response> cancelOrderFuture = asyncTask.cancelFromOrder(order, headers);
+                // Future<Response> cancelOrderFuture = asyncTask.cancelFromOrder(order, headers);
+                Response changeOrderResult = cancelFromOrder(order, headers);
                 // 2. drawback money
                 String money = calculateRefund(order);
-                Future<Boolean> drawbackMoneyFuture = asyncTask.drawBackMoney(money, loginId, headers);
+                Future<Boolean> drawbackMoneyFuture = asyncTask.drawBackMoney(loginId, orderId, money, headers);
 
                 // while (!cancelOrderFuture.isDone() || !drawbackMoneyFuture.isDone()) {
                 // [ANTIPODE] Do not wait for drawback money future
-                while (!cancelOrderFuture.isDone()) {
-                    // wait for task done.
-                }
+                // while (!cancelOrderFuture.isDone()) {
+                //     // wait for task done.
+                // }
+                // while (!drawbackMoneyFuture.isDone()) {
+                //     // wait for task done.
+                // }
+                // Response changeOrderResult = cancelOrderFuture.get();
 
-                Response changeOrderResult = cancelOrderFuture.get();
                 if (changeOrderResult.getStatus() == 1) {
                     CancelServiceImpl.LOGGER.info("[Cancel Order] Success.");
 
