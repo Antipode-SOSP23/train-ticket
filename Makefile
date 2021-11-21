@@ -22,7 +22,7 @@ push-image:
 
 .PHONY: publish-image
 publish-image:
-	@script/publish-docker-images.sh $(Repo) $(Tag)
+	@hack/publish-docker-images.sh $(Repo) $(Tag)
 
 .PHONY: clean
 clean:
