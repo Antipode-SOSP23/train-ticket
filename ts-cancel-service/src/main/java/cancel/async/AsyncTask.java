@@ -34,14 +34,9 @@ public class AsyncTask {
     @Async("myAsync")
     public Future<Response> cancelFromOrder(Order order, HttpHeaders headers) throws InterruptedException {
         /*********************** Fault Reproduction - Error Process Seq *************************/
-        // double op = new Random().nextDouble();
-        double op = 0; // [ANTIPODE] Always delay drawback -- remove randomness
-        if (op < 1.0) {
-            AsyncTask.LOGGER.error("[Cancel Order Service] Delay Process，Wrong Cancel Process");
-            Thread.sleep(4000);
-        } else {
-            AsyncTask.LOGGER.info("[Cancel Order Service] Normal Process，Normal Cancel Process");
-        }
+        // TODO? Put this sleep time into a env var
+        // Thread.sleep(4000);
+        // AsyncTask.LOGGER.error("[Cancel Order Service] Delay Process，Wrong Cancel Process");
 
         AsyncTask.LOGGER.info("[Change Order Status] Changing...");
         order.setStatus(OrderStatus.CANCEL.getCode());
@@ -61,7 +56,10 @@ public class AsyncTask {
 
     @Async("myAsync")
     public Future<Boolean> drawBackMoney(String userId, String orderId, String money, HttpHeaders headers) throws InterruptedException {
-
+        /*********************** Fault Reproduction - Error Process Seq *************************/
+        // TODO? Put this sleep time into a env var
+        // Thread.sleep(4000);
+        // AsyncTask.LOGGER.error("[Cancel Order Service] Delay Process，Wrong Cancel Process");
 
         AsyncTask.LOGGER.info("[Draw Back Money] Draw back money...");
 
