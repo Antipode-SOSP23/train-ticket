@@ -1,5 +1,10 @@
 version: '3'
 
+networks:
+  my-network:
+    # driver: overlay
+    driver: bridge
+
 services:
 
   rabbitmq:
@@ -27,7 +32,7 @@ services:
   #     - my-network
 
   jaeger:
-    image: jaegertracing/all-in-one:1.15
+    image: jaegertracing/all-in-one
     ports:
       - 16686:16686
     deploy:
@@ -564,14 +569,10 @@ services:
       - my-network
 
   ts-avatar-service:
+    build: ts-avatar-service
     image: ${NAMESPACE}/ts-avatar-service:${TAG}
     restart: always
     ports:
       - 17001:17001
     networks:
       - my-network
-
-networks:
-  my-network:
-    # driver: overlay
-    driver: bridge
