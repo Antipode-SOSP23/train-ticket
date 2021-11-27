@@ -406,6 +406,7 @@ services:
     image: ${NAMESPACE}/ts-cancel-service:${TAG}
     environment:
       JAVA_OPTS: ""
+      DELAY_DRAWBACK_SEC: -1
     restart: always
     ports:
       - 18885:18885

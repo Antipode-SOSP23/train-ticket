@@ -33,6 +33,7 @@ public class CancelServiceImpl implements CancelService {
     private AsyncTask asyncTask;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CancelServiceImpl.class);
+    private static final int DELAY_DRAWBACK_MS = Integer.parseInt(System.getenv("DELAY_DRAWBACK_SEC") != null && !System.getenv("DELAY_DRAWBACK_SEC").isEmpty() ? System.getenv("DELAY_DRAWBACK_SEC") : "-1") * 1000;
 
     String orderStatusCancelNotPermitted = "Order Status Cancel Not Permitted";
 
@@ -65,6 +66,12 @@ public class CancelServiceImpl implements CancelService {
 
                 if (changeOrderResult.getStatus() == 1) {
                     CancelServiceImpl.LOGGER.info("[Cancel Order] Success.");
+
+                    // [ANTIPODE] add sleep to evaluate % invoncistencies vs latency
+                    CancelServiceImpl.LOGGER.info("[DELAYYYY] ." + CancelServiceImpl.DELAY_DRAWBACK_MS);
+                    if (CancelServiceImpl.DELAY_DRAWBACK_MS > 0) {
+                        Thread.sleep(CancelServiceImpl.DELAY_DRAWBACK_MS);
+                    }
 
                     // //Draw back money
                     // boolean status = drawbackMoneyFuture.get();
