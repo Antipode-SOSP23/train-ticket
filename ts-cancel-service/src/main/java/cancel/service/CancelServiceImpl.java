@@ -68,7 +68,6 @@ public class CancelServiceImpl implements CancelService {
                     CancelServiceImpl.LOGGER.info("[Cancel Order] Success.");
 
                     // [ANTIPODE] add sleep to evaluate % invoncistencies vs latency
-                    CancelServiceImpl.LOGGER.info("[DELAYYYY] ." + CancelServiceImpl.DELAY_DRAWBACK_MS);
                     if (CancelServiceImpl.DELAY_DRAWBACK_MS > 0) {
                         Thread.sleep(CancelServiceImpl.DELAY_DRAWBACK_MS);
                     }
