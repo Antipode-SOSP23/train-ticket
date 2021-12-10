@@ -407,6 +407,7 @@ services:
     environment:
       JAVA_OPTS: ""
       DELAY_DRAWBACK_SEC: -1
+      ANTIPODE_ENABLED: 'false'
     restart: always
     ports:
       - 18885:18885
