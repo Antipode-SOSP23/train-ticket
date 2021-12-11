@@ -77,4 +77,10 @@ public class InsidePaymentController {
         return ok(service.queryAddMoney(headers));
     }
 
+    @GetMapping(value = "/inside_payment/money/{orderId}")
+    public HttpEntity queryOrderMoney(@PathVariable String orderId, @RequestHeader HttpHeaders headers) {
+        LOGGER.info("query order money");
+        return ok(service.queryOrderMoney(orderId, headers));
+    }
+
 }

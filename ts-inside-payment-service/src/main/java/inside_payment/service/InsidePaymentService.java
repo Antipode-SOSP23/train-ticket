@@ -84,6 +84,15 @@ public interface InsidePaymentService {
     Response queryAddMoney(HttpHeaders headers);
 
     /**
+     * query order add money
+     *
+     * @param orderId order id
+     * @param headers headers
+     * @return Response
+     */
+    Response queryOrderMoney(String orderId, HttpHeaders headers);
+
+    /**
      * init payment
      *
      * @param payment payment

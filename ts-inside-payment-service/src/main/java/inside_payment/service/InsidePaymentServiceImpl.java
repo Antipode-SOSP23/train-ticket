@@ -317,6 +317,17 @@ public class InsidePaymentServiceImpl implements InsidePaymentService {
         }
     }
 
+    @Override
+    public Response queryOrderMoney(String orderId, HttpHeaders headers) {
+        List<Money> orderMonies = addMoneyRepository.findByOrderId(orderId);
+        if (!orderMonies.isEmpty()) {
+            return new Response<>(1, "Query order Success", orderMonies);
+        } else {
+            LOGGER.error("Order not found");
+            return new Response<>(0, "Query order Failed", null);
+        }
+    }
+
     private Response setOrderStatus(String tripId, String orderId, HttpHeaders headers) {
 
         //order paid and not collected
