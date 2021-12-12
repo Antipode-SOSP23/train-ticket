@@ -2,7 +2,6 @@ package cancel.service;
 
 import cancel.async.AsyncTask;
 import cancel.entity.*;
-import cancel.repository.AddMoneyRepository;
 import edu.fudan.common.util.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,9 +25,6 @@ import java.util.concurrent.Future;
  */
 @Service
 public class CancelServiceImpl implements CancelService {
-    @Autowired
-    public AddMoneyRepository addMoneyRepository;
-
     @Autowired
     private RestTemplate restTemplate;
 
@@ -68,18 +64,14 @@ public class CancelServiceImpl implements CancelService {
                     }
 
                     // [ANTIPODE] Do not wait for drawback money future
-                    if (ANTIPODE_ENABLED){
+                    if (CancelServiceImpl.ANTIPODE_ENABLED){
                         CancelServiceImpl.LOGGER.info("[ANTIPODE] Enabled -- barrier on inside-payment-service");
-                        // loop payment repo and wait for drawback to be there
-                        while(addMoneyRepository.findByOrderId(orderId).isEmpty()) {
-                            // wait for task done.
-                        }
 
                         // loop async future
-                        // while (!drawbackMoneyFuture.isDone()) {
-                        //     // wait for task done.
-                        // }
-                        // boolean status = drawbackMoneyFuture.get();
+                        while (!drawbackMoneyFuture.isDone()) {
+                            // wait for task done.
+                        }
+                        boolean status = drawbackMoneyFuture.get();
 
                         CancelServiceImpl.LOGGER.info("[ANTIPODE] Leaving barrier");
                         // if (status) {
