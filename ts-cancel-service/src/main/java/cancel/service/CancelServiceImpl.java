@@ -2,6 +2,7 @@ package cancel.service;
 
 import cancel.async.AsyncTask;
 import cancel.entity.*;
+import cancel.repository.AddMoneyRepository;
 import edu.fudan.common.util.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +26,8 @@ import java.util.concurrent.Future;
  */
 @Service
 public class CancelServiceImpl implements CancelService {
+    @Autowired
+    public AddMoneyRepository addMoneyRepository;
 
     @Autowired
     private RestTemplate restTemplate;
@@ -45,8 +48,7 @@ public class CancelServiceImpl implements CancelService {
         if (orderResult.getStatus() == 1) {
             CancelServiceImpl.LOGGER.info("[Cancel Order] Order found G|H");
             Order order =  orderResult.getData();
-            if (order.getStatus() == OrderStatus.NOTPAID.getCode()
-                    || order.getStatus() == OrderStatus.PAID.getCode() || order.getStatus() == OrderStatus.CHANGE.getCode()) {
+            if (order.getStatus() == OrderStatus.NOTPAID.getCode() || order.getStatus() == OrderStatus.PAID.getCode() || order.getStatus() == OrderStatus.CHANGE.getCode()) {
                 /*********************** Fault Reproduction - Error Process Seq *************************/
                 // 1. cancel order
                 // Future<Response> cancelOrderFuture = asyncTask.cancelFromOrder(order, headers);
@@ -68,13 +70,20 @@ public class CancelServiceImpl implements CancelService {
                     // [ANTIPODE] Do not wait for drawback money future
                     if (ANTIPODE_ENABLED){
                         CancelServiceImpl.LOGGER.info("[ANTIPODE] Enabled -- barrier on inside-payment-service");
-                        while (!drawbackMoneyFuture.isDone()) {
+                        // loop payment repo and wait for drawback to be there
+                        while(addMoneyRepository.findByOrderId(orderId).isEmpty()) {
                             // wait for task done.
                         }
-                        // Draw back money
-                        boolean status = drawbackMoneyFuture.get();
-                        if (status) {
-                            CancelServiceImpl.LOGGER.info("[Draw Back Money] Success.");
+
+                        // loop async future
+                        // while (!drawbackMoneyFuture.isDone()) {
+                        //     // wait for task done.
+                        // }
+                        // boolean status = drawbackMoneyFuture.get();
+
+                        CancelServiceImpl.LOGGER.info("[ANTIPODE] Leaving barrier");
+                        // if (status) {
+                        //     CancelServiceImpl.LOGGER.info("[Draw Back Money] Success.");
 
                             // Response<User> result = getAccount(order.getAccountId().toString(), headers);
                             // if (result.getStatus() == 0) {
@@ -93,9 +102,9 @@ public class CancelServiceImpl implements CancelService {
                             // notifyInfo.setSeatClass(SeatClass.getNameByCode(order.getSeatClass()));
                             // notifyInfo.setStartingTime(order.getTravelTime().toString());
                             // sendEmail(notifyInfo, headers);
-                        } else {
-                            CancelServiceImpl.LOGGER.error("[Draw Back Money] Fail, loginId: {}, orderId: {}", loginId, orderId);
-                        }
+                        // } else {
+                        //     CancelServiceImpl.LOGGER.error("[Draw Back Money] Fail, loginId: {}, orderId: {}", loginId, orderId);
+                        // }
                     }
 
                     return new Response<>(1, "Success.", "test not null");
@@ -103,7 +112,6 @@ public class CancelServiceImpl implements CancelService {
                     CancelServiceImpl.LOGGER.error("[Cancel Order] Fail, orderId: {}, Reason: {}", orderId, changeOrderResult.getMsg());
                     return new Response<>(0, changeOrderResult.getMsg(), null);
                 }
-
             } else {
                 CancelServiceImpl.LOGGER.info("[Cancel Order] Order Status Not Permitted, loginId: {}, orderId: {}", loginId, orderId);
                 return new Response<>(0, orderStatusCancelNotPermitted, null);
