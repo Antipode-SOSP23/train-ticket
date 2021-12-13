@@ -19,6 +19,14 @@ public interface AddMoneyRepository extends CrudRepository<Money,String> {
     List<Money> findByUserId(String userId);
 
     /**
+     * find first by user id
+     *
+     * @param userId user id
+     * @return List<Money>
+     */
+    Money findFirstByUserId(String userId);
+
+    /**
      * find by order id
      *
      * @param orderId order id

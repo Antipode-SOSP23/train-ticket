@@ -233,13 +233,17 @@ public class InsidePaymentServiceImpl implements InsidePaymentService {
 
     @Override
     public Response drawBack(String userId, String orderId, String money, HttpHeaders headers) {
-        if (addMoneyRepository.findByUserId(userId) != null) {
+        // Very expensive call for Antipode scenario
+        // temporarly disabling it
+        // if (addMoneyRepository.findByUserId(userId) != null) {
+        if (addMoneyRepository.findFirstByUserId(userId) != null) {
             Money addMoney = new Money();
             addMoney.setUserId(userId);
             addMoney.setMoney(money);
             addMoney.setOrderId(orderId);
             addMoney.setType(MoneyType.D);
             addMoneyRepository.save(addMoney);
+            LOGGER.info("FIRST ONE WORKS");
             return new Response<>(1, "Draw Back Money Success", null);
         } else {
             LOGGER.error("Draw Back Money Failed");
