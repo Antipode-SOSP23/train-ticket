@@ -40,19 +40,5 @@ public class InitUser implements CommandLineRunner {
         if (whetherExistUser == null) {
             userRepository.save(user);
         }
-
-        // [ANTIPODE] user
-        User whetherExistAntipodeUser = userRepository.findByUserName("antipode");
-        User antipodeUser = User.builder()
-                .userId(UUID.fromString("d05c7ef0-d593-4180-91b4-eb0378192d75"))
-                .userName("antipode")
-                .password("antipode")
-                .gender(1)
-                .documentType(1)
-                .documentNum("123456789-ANTIPODE")
-                .email("antipode@antipode.com").build();
-        if (whetherExistAntipodeUser == null) {
-            userRepository.save(antipodeUser);
-        }
     }
 }
