@@ -32,8 +32,6 @@ public class CancelServiceImpl implements CancelService {
     private AsyncTask asyncTask;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CancelServiceImpl.class);
-    private static final int DELAY_DRAWBACK_MS = Integer.parseInt(System.getenv("DELAY_DRAWBACK_SEC") != null && !System.getenv("DELAY_DRAWBACK_SEC").isEmpty() ? System.getenv("DELAY_DRAWBACK_SEC") : "-1") * 1000;
-    private static final boolean ANTIPODE_ENABLED = Boolean.parseBoolean(System.getenv("ANTIPODE_ENABLED"));
 
     String orderStatusCancelNotPermitted = "Order Status Cancel Not Permitted";
 
@@ -58,45 +56,29 @@ public class CancelServiceImpl implements CancelService {
                 if (changeOrderResult.getStatus() == 1) {
                     CancelServiceImpl.LOGGER.info("[Cancel Order] Success.");
 
-                    // [ANTIPODE] add sleep to evaluate % invoncistencies vs latency
-                    if (CancelServiceImpl.DELAY_DRAWBACK_MS > 0) {
-                        Thread.sleep(CancelServiceImpl.DELAY_DRAWBACK_MS);
-                    }
+                    boolean status = drawbackMoneyFuture.get();
+                    if (status) {
+                        CancelServiceImpl.LOGGER.info("[Draw Back Money] Success.");
 
-                    // [ANTIPODE] Do not wait for drawback money future
-                    if (CancelServiceImpl.ANTIPODE_ENABLED){
-                        CancelServiceImpl.LOGGER.info("[ANTIPODE] Enabled -- barrier on inside-payment-service");
-
-                        // loop async future
-                        while (!drawbackMoneyFuture.isDone()) {
-                            // wait for task done.
+                        Response<User> result = getAccount(order.getAccountId().toString(), headers);
+                        if (result.getStatus() == 0) {
+                            return new Response<>(0, "Cann't find userinfo by user id.", null);
                         }
-                        boolean status = drawbackMoneyFuture.get();
 
-                        CancelServiceImpl.LOGGER.info("[ANTIPODE] Leaving barrier");
-                        // if (status) {
-                        //     CancelServiceImpl.LOGGER.info("[Draw Back Money] Success.");
-
-                            // Response<User> result = getAccount(order.getAccountId().toString(), headers);
-                            // if (result.getStatus() == 0) {
-                            //     return new Response<>(0, "Cann't find userinfo by user id.", null);
-                            // }
-
-                            // NotifyInfo notifyInfo = new NotifyInfo();
-                            // notifyInfo.setDate(new Date().toString());
-                            // notifyInfo.setEmail(result.getData().getEmail());
-                            // notifyInfo.setStartingPlace(order.getFrom());
-                            // notifyInfo.setEndPlace(order.getTo());
-                            // notifyInfo.setUsername(result.getData().getUserName());
-                            // notifyInfo.setSeatNumber(order.getSeatNumber());
-                            // notifyInfo.setOrderNumber(order.getId().toString());
-                            // notifyInfo.setPrice(order.getPrice());
-                            // notifyInfo.setSeatClass(SeatClass.getNameByCode(order.getSeatClass()));
-                            // notifyInfo.setStartingTime(order.getTravelTime().toString());
-                            // sendEmail(notifyInfo, headers);
-                        // } else {
-                        //     CancelServiceImpl.LOGGER.error("[Draw Back Money] Fail, loginId: {}, orderId: {}", loginId, orderId);
-                        // }
+                        NotifyInfo notifyInfo = new NotifyInfo();
+                        notifyInfo.setDate(new Date().toString());
+                        notifyInfo.setEmail(result.getData().getEmail());
+                        notifyInfo.setStartingPlace(order.getFrom());
+                        notifyInfo.setEndPlace(order.getTo());
+                        notifyInfo.setUsername(result.getData().getUserName());
+                        notifyInfo.setSeatNumber(order.getSeatNumber());
+                        notifyInfo.setOrderNumber(order.getId().toString());
+                        notifyInfo.setPrice(order.getPrice());
+                        notifyInfo.setSeatClass(SeatClass.getNameByCode(order.getSeatClass()));
+                        notifyInfo.setStartingTime(order.getTravelTime().toString());
+                        sendEmail(notifyInfo, headers);
+                    } else {
+                        CancelServiceImpl.LOGGER.error("[Draw Back Money] Fail, loginId: {}, orderId: {}", loginId, orderId);
                     }
 
                     return new Response<>(1, "Success.", "test not null");

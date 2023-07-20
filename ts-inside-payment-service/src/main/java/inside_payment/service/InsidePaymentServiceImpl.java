@@ -233,9 +233,7 @@ public class InsidePaymentServiceImpl implements InsidePaymentService {
 
     @Override
     public Response drawBack(String userId, String orderId, String money, HttpHeaders headers) {
-        // Very expensive call for Antipode scenario
-        // temporarly disabling it
-        // if (addMoneyRepository.findByUserId(userId) != null) {
+        // findByUserId(userId) is Very expensive call -- use find first instead
         if (addMoneyRepository.findFirstByUserId(userId) != null) {
             Money addMoney = new Money();
             addMoney.setUserId(userId);
