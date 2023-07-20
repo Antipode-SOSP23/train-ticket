@@ -56,6 +56,22 @@ public class CancelServiceImpl implements CancelService {
                 if (changeOrderResult.getStatus() == 1) {
                     CancelServiceImpl.LOGGER.info("[Cancel Order] Success.");
 
+                    // [ANTIPODE] add sleep to evaluate % invoncistencies vs latency
+                    if (CancelServiceImpl.DELAY_DRAWBACK_MS > 0) {
+                        Thread.sleep(CancelServiceImpl.DELAY_DRAWBACK_MS);
+                    }
+
+                    // [ANTIPODE] Do not wait for drawback money future
+                    if (CancelServiceImpl.ANTIPODE_ENABLED){
+                        CancelServiceImpl.LOGGER.info("[ANTIPODE] Enabled -- barrier on inside-payment-service");
+
+                        // loop async future
+                        while (!drawbackMoneyFuture.isDone()) {
+                            // wait for task done.
+                        }
+                        CancelServiceImpl.LOGGER.info("[ANTIPODE] Leaving barrier");
+                    }
+
                     boolean status = drawbackMoneyFuture.get();
                     if (status) {
                         CancelServiceImpl.LOGGER.info("[Draw Back Money] Success.");
