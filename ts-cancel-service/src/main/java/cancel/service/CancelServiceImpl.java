@@ -32,6 +32,8 @@ public class CancelServiceImpl implements CancelService {
     private AsyncTask asyncTask;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CancelServiceImpl.class);
+    private static final int DELAY_DRAWBACK_MS = Integer.parseInt(System.getenv("DELAY_DRAWBACK_SEC") != null && !System.getenv("DELAY_DRAWBACK_SEC").isEmpty() ? System.getenv("DELAY_DRAWBACK_SEC") : "-1") * 1000;
+    private static final boolean ANTIPODE_ENABLED = Boolean.parseBoolean(System.getenv("ANTIPODE_ENABLED"));
 
     String orderStatusCancelNotPermitted = "Order Status Cancel Not Permitted";
 
