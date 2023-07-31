@@ -32,7 +32,7 @@ public class CancelServiceImpl implements CancelService {
     private AsyncTask asyncTask;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CancelServiceImpl.class);
-    private static final int DELAY_DRAWBACK_MS = Integer.parseInt(System.getenv("DELAY_DRAWBACK_SEC") != null && !System.getenv("DELAY_DRAWBACK_SEC").isEmpty() ? System.getenv("DELAY_DRAWBACK_SEC") : "-1") * 1000;
+    private static final int DELAY_DRAWBACK_MS = Integer.parseInt(System.getenv("DELAY_DRAWBACK_SEC") != null && !System.getenv("DELAY_DRAWBACK_SEC").isEmpty() ? System.getenv("DELAY_DRAWBACK_SEC") : "0") * 1000;
     private static final boolean ANTIPODE_ENABLED = Boolean.parseBoolean(System.getenv("ANTIPODE_ENABLED"));
 
     String orderStatusCancelNotPermitted = "Order Status Cancel Not Permitted";
@@ -60,6 +60,7 @@ public class CancelServiceImpl implements CancelService {
 
                     // [ANTIPODE] add sleep to evaluate % invoncistencies vs latency
                     if (CancelServiceImpl.DELAY_DRAWBACK_MS > 0) {
+                        CancelServiceImpl.LOGGER.info("[ANTIPODE] Delay: {}", CancelServiceImpl.DELAY_DRAWBACK_MS);
                         Thread.sleep(CancelServiceImpl.DELAY_DRAWBACK_MS);
                     }
 
@@ -78,23 +79,27 @@ public class CancelServiceImpl implements CancelService {
                     if (status) {
                         CancelServiceImpl.LOGGER.info("[Draw Back Money] Success.");
 
-                        Response<User> result = getAccount(order.getAccountId().toString(), headers);
-                        if (result.getStatus() == 0) {
-                            return new Response<>(0, "Cann't find userinfo by user id.", null);
-                        }
+                        // [ANTIPODE]
+                        // We comment the remaining calls to increase CancelService throughput
+                        // it has no effect on the inconsistency since that is before
 
-                        NotifyInfo notifyInfo = new NotifyInfo();
-                        notifyInfo.setDate(new Date().toString());
-                        notifyInfo.setEmail(result.getData().getEmail());
-                        notifyInfo.setStartingPlace(order.getFrom());
-                        notifyInfo.setEndPlace(order.getTo());
-                        notifyInfo.setUsername(result.getData().getUserName());
-                        notifyInfo.setSeatNumber(order.getSeatNumber());
-                        notifyInfo.setOrderNumber(order.getId().toString());
-                        notifyInfo.setPrice(order.getPrice());
-                        notifyInfo.setSeatClass(SeatClass.getNameByCode(order.getSeatClass()));
-                        notifyInfo.setStartingTime(order.getTravelTime().toString());
-                        sendEmail(notifyInfo, headers);
+                        // Response<User> result = getAccount(order.getAccountId().toString(), headers);
+                        // if (result.getStatus() == 0) {
+                        //     return new Response<>(0, "Cann't find userinfo by user id.", null);
+                        // }
+
+                        // NotifyInfo notifyInfo = new NotifyInfo();
+                        // notifyInfo.setDate(new Date().toString());
+                        // notifyInfo.setEmail(result.getData().getEmail());
+                        // notifyInfo.setStartingPlace(order.getFrom());
+                        // notifyInfo.setEndPlace(order.getTo());
+                        // notifyInfo.setUsername(result.getData().getUserName());
+                        // notifyInfo.setSeatNumber(order.getSeatNumber());
+                        // notifyInfo.setOrderNumber(order.getId().toString());
+                        // notifyInfo.setPrice(order.getPrice());
+                        // notifyInfo.setSeatClass(SeatClass.getNameByCode(order.getSeatClass()));
+                        // notifyInfo.setStartingTime(order.getTravelTime().toString());
+                        // sendEmail(notifyInfo, headers);
                     } else {
                         CancelServiceImpl.LOGGER.error("[Draw Back Money] Fail, loginId: {}, orderId: {}", loginId, orderId);
                     }
